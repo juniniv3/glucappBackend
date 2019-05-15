@@ -127,6 +127,7 @@ class UserController extends Controller
                //
            }
 
+
            /**
                * Store a new user.
                *
@@ -146,7 +147,7 @@ class UserController extends Controller
                    return response()->json(['error'=>$validator->errors()], 401);
                }
 
-
+               $registry = null;
 
                try {
 
@@ -154,12 +155,39 @@ class UserController extends Controller
 
                $regist = new Registry();
                $regist->measurement = $request->measurement;
-               $user->email = $request->email;
-               $user->password = $request->password;
-               $user->age = $request->age;
-               $user->diabetes_type = $request->diabetes_type;
-               $user->verified_mail = "false";
-               $user->save();
+               $regist->date = date('Y-m-d H:i:s');;
+
+               $regist->level = 0;
+               $table->string('indefinido');
+               $table->string('');
+
+               if ($regist->measurement < 70 ) {
+                   $regist->level = 1;
+                   $table->string('Hipoglucemia');
+                   $table->string('Trata de inmediato. Si no sabe cómo busque asistencia médica URGENTEMENTE.');
+               }
+
+               if ($regist->measurement >=80 && $regist->measurement  <= 115 ) {
+                $regist->level = 2;
+                $table->string('Normal');
+                $table->string('Felicidades, continue cuidándose.');
+               }
+
+               if ($regist->measurement >= 150 && $regist->measurement  <= 180 ) {
+                $regist->level = 3;
+                $table->string('Nivel Elevado');
+                $table->string('Tiene prediabetes o diabetes mal controlada. Busque asistencia médica.');
+               }
+
+               if ($regist->measurement > 215 ) {
+                $regist->level = 4;
+                $table->string('Altamente Elevado');
+                $table->string('Está en riesgo de padecer severas complicaciones, como: ceguera, ataque al corazón, daño al riñon, etc.');
+               }
+
+
+               $regist->save();
+               $registry = $regist;
 
 
                } catch (\Exception $e) {
@@ -167,11 +195,12 @@ class UserController extends Controller
 
                }
 
-               if ($userLoged==null) {
-                 return response()->json(['error'=> "usuario no encontrado"], 401);
+               if ($registry == null) {
+                 return response()->json(['error'=>"no se pudo crear el registro"], 401);
                }
 
-             return response()->json(['data' => $userLoged ],201);
+
+             return response()->json(['data' => $registry ],201);
                   //
               }
 
