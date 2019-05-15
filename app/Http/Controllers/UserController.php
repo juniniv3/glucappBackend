@@ -112,23 +112,23 @@ class UserController extends Controller
 
             try {
 
-            $user = App\User::find($request->id_user);
 
-            $user = DB::table('registries')
+
+            $list = DB::table('registries')
             ->where('user_id', $request->user_id)
-
             ->get();
+            $registriesList = $list;
 
             } catch (\Exception $e) {
                return response()->json(['error'=>$e], 401);
 
             }
 
-            if ($userLoged==null) {
-              return response()->json(['error'=> "usuario no encontrado"], 401);
+            if ($registriesList==null) {
+              return response()->json(['error'=> "datos no encontrados"], 401);
             }
 
-          return response()->json(['data' => $userLoged ],201);
+          return response()->json(['data' => $registriesList ],201);
                //
            }
 
