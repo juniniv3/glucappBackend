@@ -30,5 +30,9 @@ class User extends Model
     ];
 
 
+    public function registries()
+       {
+           return $this->hasMany('App\Registry');
+       }
 
 }

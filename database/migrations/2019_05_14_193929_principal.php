@@ -15,7 +15,7 @@ class Principal extends Migration
     {
 
       Schema::create('users', function (Blueprint $table) {
-          $table->bigIncrements('id');
+          $table->increments('id');
           $table->string('name');
           $table->string('email')->unique();
           $table->string('password');
@@ -26,12 +26,14 @@ class Principal extends Migration
 
 
     Schema::create('registries', function (Blueprint $table) {
-        $table->bigIncrements('id');
+        $table->increments('id');
         $table->dateTime('date');
         $table->integer('measurement');
         $table->integer('level');
         $table->string('classification');
         $table->string('message');
+        $table->unsignedInteger('user_id');
+        $table->foreign('user_id')->references('id')->on('users');
     });
 
 

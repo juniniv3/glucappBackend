@@ -108,11 +108,16 @@ class UserController extends Controller
                 return response()->json(['error'=>$validator->errors()], 401);
             }
 
-            $userLoged = null;
+            $registriesList = null;
 
             try {
 
             $user = App\User::find($request->id_user);
+
+            $user = DB::table('registries')
+            ->where('user_id', $request->user_id)
+
+            ->get();
 
             } catch (\Exception $e) {
                return response()->json(['error'=>$e], 401);
@@ -149,44 +154,50 @@ class UserController extends Controller
 
                $registry = null;
 
+
+
                try {
 
-               $user = App\User::find($request->id_user);
-
+               $user = User::find($request->id_user);
                $regist = new Registry();
                $regist->measurement = $request->measurement;
                $regist->date = date('Y-m-d H:i:s');;
 
                $regist->level = 0;
-               $table->string('indefinido');
-               $table->string('');
+
+               $regist->classification ='Hipoglucemia';
+               $regist->message ='';
+
 
                if ($regist->measurement < 70 ) {
                    $regist->level = 1;
-                   $table->string('Hipoglucemia');
-                   $table->string('Trata de inmediato. Si no sabe cómo busque asistencia médica URGENTEMENTE.');
+                   $regist->classification ='Hipoglucemia';
+                   $regist->message ='Trata de inmediato. Si no sabe cómo busque asistencia médica URGENTEMENTE.';
                }
 
                if ($regist->measurement >=80 && $regist->measurement  <= 115 ) {
                 $regist->level = 2;
-                $table->string('Normal');
-                $table->string('Felicidades, continue cuidándose.');
+                $regist->classification ='Normal';
+                $regist->message ='Felicidades, continue cuidándose.';
                }
 
                if ($regist->measurement >= 150 && $regist->measurement  <= 180 ) {
                 $regist->level = 3;
-                $table->string('Nivel Elevado');
-                $table->string('Tiene prediabetes o diabetes mal controlada. Busque asistencia médica.');
+                $regist->classification = 'Nivel Elevado';
+                $regist->message ='Tiene prediabetes o diabetes mal controlada. Busque asistencia médica.';
                }
 
                if ($regist->measurement > 215 ) {
                 $regist->level = 4;
-                $table->string('Altamente Elevado');
-                $table->string('Está en riesgo de padecer severas complicaciones, como: ceguera, ataque al corazón, daño al riñon, etc.');
+                $regist->classification = 'Altamente Elevado';
+                $regist->message ='Está en riesgo de padecer severas complicaciones, como: ceguera, ataque al corazón, daño al riñon, etc.';
                }
 
 
+               $regist->user_id = $request->user_id;
                $regist->save();
+
+
                $registry = $regist;
 
 
