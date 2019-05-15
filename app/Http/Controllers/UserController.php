@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -73,7 +74,7 @@ class UserController extends Controller
            ->where('email', $request->email)
            ->where('password', $request->password)
            ->get();
-           $userLoged = $user;
+           $userLoged = $user[0];
 
          } catch (\Exception $e) {
             return response()->json(['error'=>$e], 401);
