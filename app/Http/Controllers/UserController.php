@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Registry;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -45,7 +46,6 @@ class UserController extends Controller
     return response()->json(['data' => "usuario creado" ],201);
          //
      }
-
 
 
      /**
@@ -90,6 +90,91 @@ class UserController extends Controller
         }
 
 
+        /**
+            * Store a new regis
+            *
+            * @param  Request  $request
+            * @return Response
+            */
+           public function getRecords(Request $request)
+           {
+
+             //making  a validator to
+            $validator = Validator::make($request->all(), [
+              'user_id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error'=>$validator->errors()], 401);
+            }
+
+            $userLoged = null;
+
+            try {
+
+            $user = App\User::find($request->id_user);
+
+            } catch (\Exception $e) {
+               return response()->json(['error'=>$e], 401);
+
+            }
+
+            if ($userLoged==null) {
+              return response()->json(['error'=> "usuario no encontrado"], 401);
+            }
+
+          return response()->json(['data' => $userLoged ],201);
+               //
+           }
+
+           /**
+               * Store a new user.
+               *
+               * @param  Request  $request
+               * @return Response
+               */
+              public function addRegistry(Request $request)
+              {
+
+                //making  a validator to
+               $validator = Validator::make($request->all(), [
+                 'user_id' => 'required',
+                 'measurement'=>'required',
+               ]);
+
+               if ($validator->fails()) {
+                   return response()->json(['error'=>$validator->errors()], 401);
+               }
+
+
+
+               try {
+
+               $user = App\User::find($request->id_user);
+
+               $regist = new Registry();
+               $regist->measurement = $request->measurement;
+               $user->email = $request->email;
+               $user->password = $request->password;
+               $user->age = $request->age;
+               $user->diabetes_type = $request->diabetes_type;
+               $user->verified_mail = "false";
+               $user->save();
+
+
+               } catch (\Exception $e) {
+                  return response()->json(['error'=>$e], 401);
+
+               }
+
+               if ($userLoged==null) {
+                 return response()->json(['error'=> "usuario no encontrado"], 401);
+               }
+
+             return response()->json(['data' => $userLoged ],201);
+                  //
+              }
+
 
         /**
             * Check server.
@@ -103,4 +188,7 @@ class UserController extends Controller
           return response()->json(['data' => "server online" ],200);
                //
            }
+
+
+
 }
