@@ -23,7 +23,19 @@ class Principal extends Migration
           $table->string('diabetes_type');
           $table->string('verified_mail');
       });
-    }
+
+
+    Schema::create('registries', function (Blueprint $table) {
+        $table->bigIncrements('id');
+        $table->dateTime('date');
+        $table->integer('measurement');
+        $table->integer('level');
+        $table->string('classification');
+        $table->string('message');
+    });
+
+
+}
 
     /**
      * Reverse the migrations.

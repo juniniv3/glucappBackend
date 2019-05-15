@@ -12,8 +12,11 @@ class Registry extends Model
      *
      * @var array
      */
+
+     protected $table = 'registries';
     protected $fillable = [
         'date', 'measurement','classification','level','message'
     ];
+
 
 }
