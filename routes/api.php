@@ -15,3 +15,5 @@ use Illuminate\Http\Request;
 
 
 Route::post('register', 'UserController@register');
+Route::post('login', 'UserController@login');
+Route::get('check', 'UserController@check');
