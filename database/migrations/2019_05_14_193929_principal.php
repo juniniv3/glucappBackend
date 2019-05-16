@@ -32,6 +32,7 @@ class Principal extends Migration
         $table->integer('level');
         $table->string('classification');
         $table->string('message');
+        $table->string('situation');
         $table->unsignedInteger('user_id');
         $table->foreign('user_id')->references('id')->on('users');
     });

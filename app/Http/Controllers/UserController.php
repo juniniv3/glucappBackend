@@ -145,6 +145,7 @@ class UserController extends Controller
                $validator = Validator::make($request->all(), [
                  'user_id' => 'required',
                  'measurement'=>'required',
+                 'situation'=>'required',
                ]);
 
                if ($validator->fails()) {
@@ -167,29 +168,64 @@ class UserController extends Controller
                $regist->classification ='Hipoglucemia';
                $regist->message ='';
 
+               $regist->situation =  $request->situation;
 
-               if ($regist->measurement < 70 ) {
-                   $regist->level = 1;
-                   $regist->classification ='Hipoglucemia';
-                   $regist->message ='Trata de inmediato. Si no sabe cómo busque asistencia médica URGENTEMENTE.';
-               }
 
-               if ($regist->measurement >=80 && $regist->measurement  <= 115 ) {
-                $regist->level = 2;
-                $regist->classification ='Normal';
-                $regist->message ='Felicidades, continue cuidándose.';
-               }
+               if($request->situation == "ayunas"){
 
-               if ($regist->measurement >= 150 && $regist->measurement  <= 180 ) {
-                $regist->level = 3;
-                $regist->classification = 'Nivel Elevado';
-                $regist->message ='Tiene prediabetes o diabetes mal controlada. Busque asistencia médica.';
-               }
+                 if ($regist->measurement < 70 ) {
+                     $regist->level = 1;
+                     $regist->classification ='Hipoglucemia';
+                     $regist->message ='Trata de inmediato. Si no sabe cómo busque asistencia médica URGENTEMENTE.';
+                 }
 
-               if ($regist->measurement > 215 ) {
-                $regist->level = 4;
-                $regist->classification = 'Altamente Elevado';
-                $regist->message ='Está en riesgo de padecer severas complicaciones, como: ceguera, ataque al corazón, daño al riñon, etc.';
+                 if ($regist->measurement >=70 && $regist->measurement  <= 100 ) {
+                  $regist->level = 2;
+                  $regist->classification ='Normal (Sin diabetes)';
+                  $regist->message ='Felicidades, continue cuidándose.';
+                 }
+
+                 if ($regist->measurement >100 && $regist->measurement  <= 125 ) {
+                  $regist->level = 3;
+                  $regist->classification = 'Nivel Elevado (Pre-diabetes)';
+                  $regist->message ='Tiene prediabetes o diabetes mal controlada. Busque asistencia médica.';
+                 }
+
+                 if ($regist->measurement >=126 ) {
+                  $regist->level = 4;
+                  $regist->classification = 'Altamente Elevado (Diabetes)';
+                  $regist->message ='Está en riesgo de padecer severas complicaciones, como: ceguera, ataque al corazón, daño al riñon, etc.';
+
+                 }
+
+               }else{
+
+
+                 if ($regist->measurement < 70 ) {
+                     $regist->level = 1;
+                     $regist->classification ='Hipoglucemia';
+                     $regist->message ='Trata de inmediato. Si no sabe cómo busque asistencia médica URGENTEMENTE.';
+                 }
+
+                 if ($regist->measurement >=70 && $regist->measurement  < 140 ) {
+                  $regist->level = 2;
+                  $regist->classification ='Normal (Sin diabetes)';
+                  $regist->message ='Felicidades, continue cuidándose.';
+                 }
+
+                 if ($regist->measurement >=140 && $regist->measurement  < 200 ) {
+                  $regist->level = 3;
+                  $regist->classification = 'Nivel Elevado (Pre-diabetes)';
+                  $regist->message ='Tiene prediabetes o diabetes mal controlada. Busque asistencia médica.';
+                 }
+
+                 if ($regist->measurement >=200 ) {
+                  $regist->level = 4;
+                  $regist->classification = 'Altamente Elevado (Diabetes)';
+                  $regist->message ='Está en riesgo de padecer severas complicaciones, como: ceguera, ataque al corazón, daño al riñon, etc.';
+
+                 }
+
                }
 
 

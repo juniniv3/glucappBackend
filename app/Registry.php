@@ -15,7 +15,7 @@ class Registry extends Model
 
      protected $table = 'registries';
     protected $fillable = [
-        'date', 'measurement','classification','level','message'
+        'date', 'measurement','classification','level','message','situation'
     ];
 
     public function user()
